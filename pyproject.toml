@@ -2,12 +2,24 @@
 name = "pygrokai"
 version = "0.1.0"
 description = "A Python library to interact with the Grok AI API for chat and image generation."
-authors = ["JaydenChao101 jaydenchao@icloud.com"]
-license = "GPL v3"
+authors = ["JaydenChao101 <jaydenchao@icloud.com>"]
+license = "GPL-3.0-or-later"
 readme = "README.md"
 homepage = "https://github.com/JaydenChao101/grok"
 repository = "https://github.com/JaydenChao101/grok"
 keywords = ["Grok AI", "API", "chat", "image generation"]
+
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+]
 
 [tool.poetry.dependencies]
 python = "^3.7"
