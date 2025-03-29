@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "pygrokai"
+version = "0.1.0"
+description = "A Python library to interact with the Grok AI API for chat and image generation."
+authors = ["JaydenChao101 jaydenchao@icloud.com"]
+license = "GPL v3"
+readme = "README.md"
+homepage = "https://github.com/JaydenChao101/grok"
+repository = "https://github.com/JaydenChao101/grok"
+keywords = ["Grok AI", "API", "chat", "image generation"]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+cloudscraper = "^1.2.71"
+rich = "^13.4.2"
+
+[tool.poetry.dev-dependencies]
+pytest = "^7.4.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
