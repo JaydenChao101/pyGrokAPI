@@ -42,6 +42,7 @@ class GrokAI:
     # 检查 NewChat 和 ChatID 是否都有值
     def __init__(self,GrokAccount: GrokAccount):
         self.GrokAccount = GrokAccount
+        self.Console = Console()
         obj = self.GrokAccount
 
         has_new_chat = obj.NewChat  # 检查 NewChat 是否为 True
@@ -49,7 +50,7 @@ class GrokAI:
         if has_new_chat and has_chat_id:
             raise ValueError("NewChat 和 ChatID 不能同时为 True 和非 None")
         
-    def Chat(self, disableSearch: bool = False, enableImageGeneration: bool = True, imageGenerationCount: int = 2, isReasoning: bool = False):
+    def Chat(self, disableSearch: bool = False, enableImageGeneration: bool = True, imageGenerationCount: int = 2, isReasoning: bool = False,test: bool = False):
         self.cookies = self.GrokAccount.cookies
         self.message = self.GrokAccount.message
         self.modelName = self.GrokAccount.modelName
@@ -85,9 +86,17 @@ class GrokAI:
             'disableTextFollowUps': True
         }
 
-        console = Console()
+        console = self.Console
+        # 创建 cloudscraper 实例
         scraper = cloudscraper.create_scraper()
         response = scraper.post(self.url, headers=self.headers, cookies=self.cookies, json=self.data, stream=True)
+        if test is True:
+            # 這是測試代碼!!!!
+            console.print(f"Request URL: {self.url}", style="bold blue")
+            console.print(f"Headers: {self.headers}", style="bold blue")
+            console.print(f"Cookies: {self.cookies}", style="bold blue")
+            console.print(f"Data: {self.data}", style="bold blue")
+        
 
         # 檢查狀態碼
         if response.status_code == 200:
@@ -95,16 +104,31 @@ class GrokAI:
                 if line:
                     decoded_line = line.decode('utf-8')
                     try:
+                        # 解析 JSON
                         json_data = json.loads(decoded_line)
-                        token = json_data.get('result', {}).get('token', '')
-                        if token:  # 只打印非空 token
+                        
+                        # 提取 token
+                        token = json_data.get("result", {}).get("response", {}).get("token", "")
+                        
+                        # 如果 token 存在，逐字輸出
+                        if token:
                             print_by_char_rich(console, token, delay=0.05)
+                        
                     except json.JSONDecodeError:
                         console.print("解析 JSON 失败", style="bold red")
-                        continue
         else:
             console.print("请求失败", style="bold red")
             console.print(response.text)
+            '''
+        for line in response.iter_lines():
+            if line:
+                decoded_line = line.decode('utf-8')
+                try:
+                    json_data = json.loads(decoded_line)
+                    print(json_data)
+                except json.JSONDecodeError:
+                    print("解析 JSON 失败", style="bold red")
+                    continue'''
         
 '''
 
@@ -203,5 +227,4 @@ if response.status_code == 200:
 else:
     console.print("请求失败", style="bold red")
     console.print(response.text)
-
 '''
