@@ -37,6 +37,9 @@ jobs:
         with:
           name: release-dists
           path: dist/
+          
+      - name: Set up working directory
+        run: cd ${{ github.workspace }}
 
   pypi-publish:
     runs-on: ubuntu-latest
