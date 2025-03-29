@@ -6,7 +6,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: grok
+name: pygrokai
 
 on:
   release:
