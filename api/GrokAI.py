@@ -14,10 +14,11 @@ def print_by_char_rich(console, text, delay=0.002):
 class GrokAccount:
     cookies: dict
     message: str
+    headers: dict
     modelName: str = "grok-2"
     NewChat: bool = True
     ChatID: str = None
-    headers: dict
+    
 
 class GrokAI:
     """
@@ -48,10 +49,7 @@ class GrokAI:
         if has_new_chat and has_chat_id:
             raise ValueError("NewChat 和 ChatID 不能同时为 True 和非 None")
         
-    def Chat(self,disableSearch: bool = False, enableImageGeneration: bool = True,imageGenerationCount: int = 2,isReasoning: bool = False):
-        
-        
-        self.GrokAccount = GrokAccount
+    def Chat(self, disableSearch: bool = False, enableImageGeneration: bool = True, imageGenerationCount: int = 2, isReasoning: bool = False):
         self.cookies = self.GrokAccount.cookies
         self.message = self.GrokAccount.message
         self.modelName = self.GrokAccount.modelName
@@ -60,10 +58,12 @@ class GrokAI:
         self.headers = self.GrokAccount.headers
         self.headers['referer'] = 'https://grok.com/chat/'
         self.responseUrl: str
+
         if self.NewChat is False:
             self.url = f"https://grok.com/rest/app-chat/conversations/{self.ChatID}/responses"
         else:
             self.url = "https://grok.com/rest/app-chat/conversations/new"
+
         self.data = {
             'message': self.message,
             'modelName': self.modelName,
@@ -84,12 +84,12 @@ class GrokAI:
             'webpageUrls': [],
             'disableTextFollowUps': True
         }
+
         console = Console()
-        
-        
         scraper = cloudscraper.create_scraper()
         response = scraper.post(self.url, headers=self.headers, cookies=self.cookies, json=self.data, stream=True)
-        # 检查状态码
+
+        # 檢查狀態碼
         if response.status_code == 200:
             for line in response.iter_lines():
                 if line:
@@ -105,7 +105,6 @@ class GrokAI:
         else:
             console.print("请求失败", style="bold red")
             console.print(response.text)
-
         
 '''
 
@@ -136,14 +135,7 @@ headers = {
     'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/134.0.0.0 Safari/537.36'
 }
 
-cookies = {
-    '_ga': 'GA1.1.1691019154.1742809195',
-    'sso': 'eyJhbGciOiJIUzI1NiJ9.eyJzZXNzaW9uX2lkIjoiNGNjOTZlOTctYzNlYS00NTUyLTlhYWYtMWI1ZjJiNmY3MDNjIn0.BnY3wcBEA70vch8OHI8a_kBzhKfene7JsEYSvPuHgU0',
-    'sso-rw': 'eyJhbGciOiJIUzI1NiJ9.eyJzZXNzaW9uX2lkIjoiNGNjOTZlOTctYzNlYS00NTUyLTlhYWYtMWI1ZjJiNmY3MDNjIn0.BnY3wcBEA70vch8OHI8a_kBzhKfene7JsEYSvPuHgU0',
-    'i18nextLng': 'zh-TW',
-    'cf_clearance': 'ZpNCBzAzfFEvuvXFd_LwQ55rOEZiZ5nNZCujaRJrOwc-1743233813-1.2.1.1-xrR5zXYyqubufUAaYZLUYc9b25qVg4i1BWsD6oDYHXKc7o2SbapCg7GAETaO1i6YczLcq6yAxaf3qkfKfBstKvPvZp7Faa8IeAUri17n22cPmx_oDN5YAWr58njiTqu8mE3PBYdrmmiWi3leeSVtLPoqwvcDq7eoP3D78KPGTON5KhevogBKvfvf09yu0maUcLbMsqquA0sTKiXh5uXEQpsbmdqUcgMlxaxE5iqPcEhPgaZ8BCX83YK9Tk3S0dXXxASMxK8BUfQ.LDu2AhB6ag1olsCy_nMuVt6W6Tqv3J7GqNj.2gKx0BFt1cBi0kV40TvtFOdCzNBAYKOjFxXsI3tBRT47PNmqtJfuTszH8DI',
-    '_ga_8FEWB057YH': 'GS1.1.1743232889.3.1.1743233813.0.0.0'
-}
+
 
 message = """Hello, World!"""
 
@@ -168,8 +160,19 @@ data = {
     'disableTextFollowUps': True
 }
 
+# 定义 cookies 变量
+cookies = {
+    # 在此处添加适当的键值对，例如:
+    # 'session_id': 'your_session_id',
+    # 'auth_token': 'your_auth_token'
+}
+
 # 创建 GrokAccount 实例
-account = GrokAI(cookies=cookies)
+account = GrokAccount(
+    cookies=cookies,
+    message=message,
+    headers=headers
+)
 
 # 初始化 rich console
 console = Console()
@@ -200,5 +203,5 @@ if response.status_code == 200:
 else:
     console.print("请求失败", style="bold red")
     console.print(response.text)
-'''
 
+'''
