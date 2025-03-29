@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from dataclasses import dataclass
 import cloudscraper
 from rich.console import Console
@@ -59,16 +61,34 @@ class GrokAI:
         self.headers = self.GrokAccount.headers
         self.headers['referer'] = 'https://grok.com/chat/'
         self.responseUrl: str
+        global has_valid_response
+        has_valid_response = False
+
+        scraper = cloudscraper.create_scraper()
 
         if self.NewChat is False:
             self.url = f"https://grok.com/rest/app-chat/conversations/{self.ChatID}/responses"
+            response = scraper.get(f"https://grok.com/rest/app-chat/conversations/{self.ChatID}/response-node")
+            '''if response.status_code == 200:
+                response_data = response.json()
+                response_nodes = response_data.get("responseNodes", [])
+                if response_nodes:
+                    response_id = response_nodes[0].get("responseId", None)
+                    if response_id:
+                        responseId = response_id
+                    else:
+                        print("responseId not found in the first responseNode.")
+                        responseId = None
+                else:
+                    print("No responseNodes found in the JSON data.")
+                    responseId = None'''
         else:
             self.url = "https://grok.com/rest/app-chat/conversations/new"
 
         self.data = {
             'message': self.message,
             'modelName': self.modelName,
-            'parentResponseId': None,
+            'parentResponseId': None,#responseId if self.NewChat is False else None,
             'disableSearch': disableSearch,
             'enableImageGeneration': enableImageGeneration,
             'imageAttachments': [],
@@ -88,7 +108,7 @@ class GrokAI:
 
         console = self.Console
         # 创建 cloudscraper 实例
-        scraper = cloudscraper.create_scraper()
+        
         response = scraper.post(self.url, headers=self.headers, cookies=self.cookies, json=self.data, stream=True)
         if test is True:
             # 這是測試代碼!!!!
@@ -112,13 +132,24 @@ class GrokAI:
                         
                         # 如果 token 存在，逐字輸出
                         if token:
+                            
+                            has_valid_response = True
                             print_by_char_rich(console, token, delay=0.05)
                         
                     except json.JSONDecodeError:
                         console.print("解析 JSON 失败", style="bold red")
+                
+            if not has_valid_response:
+                # 如果没有有效的响应，打印错误信息
+                console.print("AI 太忙，請稍後再試。", style="bold yellow")
+                
         else:
             console.print("请求失败", style="bold red")
-            console.print(response.text)
+            console.print(response.status_code, style="bold red")
+            if "Just a moment..." in response.text or "<title>Just a moment...</title>" in response.text:
+                console.print("請求被 Cloudflare 防護攔截，請更新 Cookies 或 Headers。", style="bold red")
+            else:
+                console.print(response.text, style="bold red")
             '''
         for line in response.iter_lines():
             if line:
