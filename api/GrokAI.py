@@ -17,7 +17,6 @@ class GrokAccount:
     cookies: dict
     message: str
     headers: dict
-    modelName: str = "grok-2"
     NewChat: bool = True
     ChatID: str = None
     
@@ -61,6 +60,7 @@ class GrokAI:
         self.headers = self.GrokAccount.headers
         self.headers['referer'] = 'https://grok.com/chat/'
         self.responseUrl: str
+        modelName: str = "grok-2"
         global has_valid_response
         has_valid_response = False
 
@@ -88,7 +88,7 @@ class GrokAI:
         self.data = {
             'message': self.message,
             'modelName': self.modelName,
-            'parentResponseId': None,#responseId if self.NewChat is False else None,
+            'parentResponseId': responseId if self.NewChat is False else None,
             'disableSearch': disableSearch,
             'enableImageGeneration': enableImageGeneration,
             'imageAttachments': [],
