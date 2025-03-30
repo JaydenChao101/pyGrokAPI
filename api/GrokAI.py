@@ -19,6 +19,7 @@ class GrokAccount:
     headers: dict
     NewChat: bool = True
     ChatID: str = None
+    modelName: str = "grok-2"
     
 
 class GrokAI:
@@ -60,7 +61,6 @@ class GrokAI:
         self.headers = self.GrokAccount.headers
         self.headers['referer'] = 'https://grok.com/chat/'
         self.responseUrl: str
-        modelName: str = "grok-2"
         global has_valid_response
         has_valid_response = False
 
