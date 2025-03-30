@@ -131,7 +131,7 @@ class GrokAI:
                         
                         # 提取 token
                         token = json_data.get("result", {}).get("response", {}).get("token", "")
-                        generated_image_urls = json_data.get("result", {}).get("modelResponse", {}).get("generatedImageUrls", [])
+                        generated_image_urls = json_data.get("result", {}).get("response", {}).get("modelResponse", {}).get("generatedImageUrls", [])
                         # 如果 token 存在，逐字輸出
                         if token or generated_image_urls:
                             # 如果有圖片網址，打印圖片網址
