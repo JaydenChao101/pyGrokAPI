@@ -129,15 +129,21 @@ class GrokAI:
                         # 解析 JSON
                         json_data = json.loads(decoded_line)
                         
-                        # 提取 token
+                        # 提取 token 和图片 URL
                         token = json_data.get("result", {}).get("response", {}).get("token", "")
                         generated_image_urls = json_data.get("result", {}).get("response", {}).get("modelResponse", {}).get("generatedImageUrls", [])
+                        
                         # 如果 token 存在，逐字輸出
-                        if token or generated_image_urls:
-                            # 如果有圖片網址，打印圖片網址
-                            
+                        if token:
                             has_valid_response = True
-                            print_by_char_rich(console, token if token else generated_image_urls, delay=0.05)
+                            print_by_char_rich(console, token, delay=0.05)
+                        
+                        # 如果有圖片網址，單獨打印
+                        if generated_image_urls:
+                            has_valid_response = True
+                            console.print("\n生成的圖片 URL:", style="bold green")
+                            for url in generated_image_urls:
+                                console.print(url, style="bold blue")
                         
                     except json.JSONDecodeError:
                         console.print("解析 JSON 失败", style="bold red")
@@ -167,4 +173,4 @@ class GrokAI:
                 except json.JSONDecodeError:
                     print("解析 JSON 失败", style="bold red")
                     continue'''
-        
+

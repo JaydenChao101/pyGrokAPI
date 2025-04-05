@@ -5,7 +5,7 @@ from api.GrokAI import GrokAI, GrokAccount
 from rich.console import Console
 
 
-with open(r'C:\Users\Jayden\Desktop\grok\test\cookies.txt', 'r') as f:
+with open(r'path/to/cookies.txt', 'r') as f:
     cookies = {}
     for line in f:
         if line.strip():  # Ignore empty lines
@@ -13,10 +13,10 @@ with open(r'C:\Users\Jayden\Desktop\grok\test\cookies.txt', 'r') as f:
             cookies[key] = value
 
 # Example cookies dictionary
-# cookies = {
-#     'cookie_name1': 'cookie_value1',
-#     'cookie_name2': 'cookie_value2',
-#     # Add more cookies as needed
+#
+#cookie_name1': 'cookie_value1',
+#'cookie_name2': 'cookie_value2',
+# # Add more cookies as needed
 # }
 
 account = GrokAccount(
